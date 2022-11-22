@@ -12,6 +12,7 @@ const props = withDefaults(
     rtl?: boolean
     ssrColumns?: number
     scrollContainer?: HTMLElement | null
+    scrollOnReDraw: boolean
   }>(),
   {
     columnWidth: 400,
@@ -19,6 +20,7 @@ const props = withDefaults(
     rtl: false,
     ssrColumns: 0,
     scrollContainer: null,
+    scrollOnReDraw: false,
   }
 )
 
@@ -79,9 +81,11 @@ async function redraw(force = false) {
   const scrollTarget = scrollContainer?.value
   const scrollY = scrollTarget ? scrollTarget.scrollTop : window.scrollY
   await fillColumns(0)
+  if(props.scrollOnReDraw){
   scrollTarget
     ? scrollTarget.scrollBy({ top: scrollY - scrollTarget.scrollTop })
     : window.scrollTo({ top: scrollY })
+  }
   emit('redraw')
 }
 
